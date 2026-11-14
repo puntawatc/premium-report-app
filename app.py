@@ -14,6 +14,9 @@ st.set_page_config(page_title="Import รายงานเบี้ยประ
 st.title("📄 Import รายงานเบี้ยประกัน")
 st.write("Upload รายงานเบี้ยประกัน PDF ระบบจะอ่านและเขียนข้อมูลเข้า Google Sheet ให้อัตโนมัติ")
 
+REPORT_URL = "https://puntawatc.github.io/premium-report-app/dailyreport.html"
+st.link_button("📊 เปิดหน้า Daily Report", REPORT_URL, use_container_width=True)
+
 # ---------------------------------------------------------------------------
 # ตรรกะแปลง PDF (เหมือนที่ทดสอบไว้แล้ว)
 # ---------------------------------------------------------------------------
@@ -370,6 +373,7 @@ def process_and_write(file, target_sheet_url, target_worksheet_name):
 
                 st.success("เขียนเข้า Google Sheet เรียบร้อยแล้ว ✅")
                 st.markdown(f"[เปิด Google Sheet]({target_sheet_url})")
+                st.link_button("📊 ดูผลที่หน้า Daily Report (กด Reload ที่หน้านั้นเพื่อดึงข้อมูลใหม่)", REPORT_URL, use_container_width=True)
             except Exception as e:
                 st.error(f"เขียนเข้า Google Sheet ไม่สำเร็จ: {type(e).__name__} {e}")
     else:
