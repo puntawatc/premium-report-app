@@ -1,0 +1,8 @@
+# กุญแจ Service Account — ห้ามขึ้น GitHub
+*.json
+.streamlit/secrets.toml
+
+# ไฟล์รายงานที่มีรายชื่อตัวแทน — ห้ามขึ้น GitHub
+*.pdf
+*.xlsx
+*.zip
