@@ -314,7 +314,8 @@ def get_gsheet_client():
 
 DEFAULT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1Rjy9FoWz__tZt3uin0bUZlifGP65VQNVucUEmlHAuxk/edit?usp=sharing"
 
-sheet_url = DEFAULT_SHEET_URL
+# ใส่ sheet_url = "ลิงก์ชีต" ใน Secrets เพื่อเปลี่ยนชีตได้โดยไม่ต้องแก้โค้ด
+sheet_url = st.secrets.get("sheet_url", DEFAULT_SHEET_URL)
 worksheet_name = "Import"
 
 if "uploader_generation" not in st.session_state:
@@ -370,7 +371,7 @@ def process_and_write(file, target_sheet_url, target_worksheet_name):
                 st.success("เขียนเข้า Google Sheet เรียบร้อยแล้ว ✅")
                 st.markdown(f"[เปิด Google Sheet]({target_sheet_url})")
             except Exception as e:
-                st.error(f"เขียนเข้า Google Sheet ไม่สำเร็จ: {e}")
+                st.error(f"เขียนเข้า Google Sheet ไม่สำเร็จ: {type(e).__name__} {e}")
     else:
         st.info("ยังไม่ได้ใส่ลิงก์ Google Sheet — ดูตารางด้านบนได้เลย หรือใส่ลิงก์แล้วลองใหม่อีกครั้ง")
 
@@ -393,7 +394,7 @@ def process_xlsx_merge(xlsx_file, target_sheet_url, target_worksheet_name):
         sh = gc.open_by_url(target_sheet_url)
         ws = sh.worksheet(target_worksheet_name)
     except Exception as e:
-        st.error(f"เปิด Google Sheet ไม่สำเร็จ: {e}")
+        st.error(f"เปิด Google Sheet ไม่สำเร็จ: {type(e).__name__} {e}")
         return
 
     existing = ws.get_all_values()
@@ -464,7 +465,7 @@ def process_fyp_merge(xlsx_file, target_sheet_url, fyp_worksheet_name):
         except gspread.WorksheetNotFound:
             ws = sh.add_worksheet(title=fyp_worksheet_name, rows=1000, cols=20)
     except Exception as e:
-        st.error(f"เปิด Google Sheet ไม่สำเร็จ: {e}")
+        st.error(f"เปิด Google Sheet ไม่สำเร็จ: {type(e).__name__} {e}")
         return
 
     # ล้างข้อมูลเดิมทั้งหมดในชีตนี้ก่อนเสมอ แล้วเริ่มใหม่จากไฟล์ที่นำเข้าครั้งนี้
@@ -583,7 +584,7 @@ def process_closebook_import(xlsx_file, target_sheet_url, worksheet_name):
             ws = sh.add_worksheet(title=worksheet_name, rows=1000, cols=10)
             is_new = True
     except Exception as e:
-        st.error(f"เปิด Google Sheet ไม่สำเร็จ: {e}")
+        st.error(f"เปิด Google Sheet ไม่สำเร็จ: {type(e).__name__} {e}")
         return
 
     affiliation_lookup = build_import_affiliation_lookup(sh)
