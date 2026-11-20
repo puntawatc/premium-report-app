@@ -1112,10 +1112,10 @@
                 }).from(wrap).outputPdf('blob');
 
                 if (isIOSDevice()) {
-                    // iPad/iPhone: ต้องแตะอีกครั้งเพื่อบันทึก (Safari ไม่ให้ดาวน์โหลดเองหลังรอสร้างไฟล์)
+                    // iPad/iPhone: ต้องแตะอีกครั้งเพื่อเปิด PDF (Safari ไม่ให้ดาวน์โหลดเองหลังรอสร้างไฟล์)
                     pendingPdf = { blob: blob, filename: filename };
                     btn.disabled = false;
-                    label.textContent = 'แตะเพื่อบันทึก PDF';
+                    label.textContent = 'แตะเพื่อเปิด PDF';
                     btn.classList.add('bg-green-600');
                     return;
                 }
@@ -1144,17 +1144,8 @@
             const label = document.getElementById('btn-download-pdf-label');
             btn.classList.remove('bg-green-600');
             label.textContent = 'ดาวน์โหลด PDF';
-            const file = new File([item.blob], item.filename, { type: 'application/pdf' });
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                try {
-                    await navigator.share({ files: [file], title: item.filename });
-                    return;
-                } catch (e) {
-                    if (e && e.name === 'AbortError') return; // ผู้ใช้กดยกเลิก
-                }
-            }
-            // สำรอง: เปิด PDF ในแท็บใหม่ แล้วกดปุ่มแชร์ > บันทึกไปยังไฟล์
-            const url = URL.createObjectURL(item.blob);
+            // เปิด PDF ในแท็บใหม่ให้ดูบนเว็บ (ถ้าต้องการเก็บ กดปุ่มแชร์ > บันทึกไปยังไฟล์)
+            const url = URL.createObjectURL(new Blob([item.blob], { type: 'application/pdf' }));
             const w = window.open(url, '_blank');
             if (!w) location.href = url;
         }
